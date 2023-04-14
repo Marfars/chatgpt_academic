@@ -1,6 +1,7 @@
-from .crazy_utils import request_gpt_model_in_new_thread_with_ui_alive
 from toolbox import CatchException, report_execption, write_results_to_file
 from toolbox import update_ui
+from .crazy_utils import request_gpt_model_in_new_thread_with_ui_alive
+
 
 def get_meta_information(url, chatbot, history):
     import requests
@@ -32,15 +33,15 @@ def get_meta_information(url, chatbot, history):
             citation = 'cited by 0'
         abstract = result.select_one(".gs_rs").text.strip()  # 摘要在 .gs_rs 中的文本，需要清除首尾空格
         search = arxiv.Search(
-            query = title,
-            max_results = 1,
-            sort_by = arxiv.SortCriterion.Relevance,
+            query=title,
+            max_results=1,
+            sort_by=arxiv.SortCriterion.Relevance,
         )
         paper = next(search.results())
-        if string_similar(title, paper.title) > 0.90: # same paper
+        if string_similar(title, paper.title) > 0.90:  # same paper
             abstract = paper.summary.replace('\n', ' ')
             is_paper_in_arxiv = True
-        else:   # different paper
+        else:  # different paper
             abstract = abstract
             is_paper_in_arxiv = False
         paper = next(search.results())
@@ -48,16 +49,18 @@ def get_meta_information(url, chatbot, history):
         print(author)
         print(citation)
         profile.append({
-            'title':title,
-            'author':author,
-            'citation':citation,
-            'abstract':abstract,
-            'is_paper_in_arxiv':is_paper_in_arxiv,
+            'title': title,
+            'author': author,
+            'citation': citation,
+            'abstract': abstract,
+            'is_paper_in_arxiv': is_paper_in_arxiv,
         })
 
-        chatbot[-1] = [chatbot[-1][0], title + f'\n\n是否在arxiv中（不在arxiv中无法获取完整摘要）:{is_paper_in_arxiv}\n\n' + abstract]
-        yield from update_ui(chatbot=chatbot, history=[]) # 刷新界面
+        chatbot[-1] = [chatbot[-1][0],
+                       title + f'\n\n是否在arxiv中（不在arxiv中无法获取完整摘要）:{is_paper_in_arxiv}\n\n' + abstract]
+        yield from update_ui(chatbot=chatbot, history=[])  # 刷新界面
     return profile
+
 
 @CatchException
 def 谷歌检索小助手(txt, llm_kwargs, plugin_kwargs, chatbot, history, system_prompt, web_port):
@@ -65,17 +68,17 @@ def 谷歌检索小助手(txt, llm_kwargs, plugin_kwargs, chatbot, history, syst
     chatbot.append([
         "函数插件功能？",
         "分析用户提供的谷歌学术（google scholar）搜索页面中，出现的所有文章: binary-husky，插件初始化中..."])
-    yield from update_ui(chatbot=chatbot, history=history) # 刷新界面
+    yield from update_ui(chatbot=chatbot, history=history)  # 刷新界面
 
     # 尝试导入依赖，如果缺少依赖，则给出安装建议
     try:
         import arxiv
         from bs4 import BeautifulSoup
     except:
-        report_execption(chatbot, history, 
-            a = f"解析项目: {txt}", 
-            b = f"导入软件依赖失败。使用该模块需要额外依赖，安装方法```pip install --upgrade beautifulsoup4 arxiv```。")
-        yield from update_ui(chatbot=chatbot, history=history) # 刷新界面
+        report_execption(chatbot, history,
+                         a=f"解析项目: {txt}",
+                         b=f"导入软件依赖失败。使用该模块需要额外依赖，安装方法```pip install --upgrade beautifulsoup4 arxiv```。")
+        yield from update_ui(chatbot=chatbot, history=history)  # 刷新界面
         return
 
     # 清空历史，以免输入溢出
@@ -85,22 +88,22 @@ def 谷歌检索小助手(txt, llm_kwargs, plugin_kwargs, chatbot, history, syst
 
     if len(meta_paper_info_list[:10]) > 0:
         i_say = "下面是一些学术文献的数据，请从中提取出以下内容。" + \
-        "1、英文题目；2、中文题目翻译；3、作者；4、arxiv公开（is_paper_in_arxiv）；4、引用数量（cite）；5、中文摘要翻译。" + \
-        f"以下是信息源：{str(meta_paper_info_list[:10])}" 
+                "1、英文题目；2、中文题目翻译；3、作者；4、arxiv公开（is_paper_in_arxiv）；4、引用数量（cite）；5、中文摘要翻译。" + \
+                f"以下是信息源：{str(meta_paper_info_list[:10])}"
 
         inputs_show_user = f"请分析此页面中出现的所有文章：{txt}"
         gpt_say = yield from request_gpt_model_in_new_thread_with_ui_alive(
-            inputs=i_say, inputs_show_user=inputs_show_user, 
-            llm_kwargs=llm_kwargs, chatbot=chatbot, history=[], 
+            inputs=i_say, inputs_show_user=inputs_show_user,
+            llm_kwargs=llm_kwargs, chatbot=chatbot, history=[],
             sys_prompt="你是一个学术翻译，请从数据中提取信息。你必须使用Markdown格式。你必须逐个文献进行处理。"
         )
 
-        history.extend([ "第一批", gpt_say ])
+        history.extend(["第一批", gpt_say])
         meta_paper_info_list = meta_paper_info_list[10:]
 
     chatbot.append(["状态？", "已经全部完成"])
     msg = '正常'
-    yield from update_ui(chatbot=chatbot, history=history, msg=msg) # 刷新界面
+    yield from update_ui(chatbot=chatbot, history=history, msg=msg)  # 刷新界面
     res = write_results_to_file(history)
-    chatbot.append(("完成了吗？", res)); 
-    yield from update_ui(chatbot=chatbot, history=history, msg=msg) # 刷新界面
+    chatbot.append(("完成了吗？", res));
+    yield from update_ui(chatbot=chatbot, history=history, msg=msg)  # 刷新界面

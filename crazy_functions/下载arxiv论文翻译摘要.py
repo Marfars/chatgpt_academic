@@ -1,11 +1,16 @@
-from toolbox import update_ui
+import os
+import re
+import requests
+
 from toolbox import CatchException, report_execption, write_results_to_file, get_conf
-import re, requests, unicodedata, os
+from toolbox import update_ui
 from .crazy_utils import request_gpt_model_in_new_thread_with_ui_alive
+
+
 def download_arxiv_(url_pdf):
     if 'arxiv.org' not in url_pdf:
         if ('.' in url_pdf) and ('/' not in url_pdf):
-            new_url = 'https://arxiv.org/abs/'+url_pdf
+            new_url = 'https://arxiv.org/abs/' + url_pdf
             print('下载编号：', url_pdf, '自动定位：', new_url)
             # download_arxiv_(new_url)
             return download_arxiv_(new_url)
@@ -31,15 +36,15 @@ def download_arxiv_(url_pdf):
     download_dir = './gpt_log/arxiv/'
     os.makedirs(download_dir, exist_ok=True)
 
-    title_str = title.replace('?', '？')\
-        .replace(':', '：')\
-        .replace('\"', '“')\
-        .replace('\n', '')\
-        .replace('  ', ' ')\
+    title_str = title.replace('?', '？') \
+        .replace(':', '：') \
+        .replace('\"', '“') \
+        .replace('\n', '') \
+        .replace('  ', ' ') \
         .replace('  ', ' ')
 
     requests_pdf_url = url_pdf
-    file_path = download_dir+title_str
+    file_path = download_dir + title_str
     # if os.path.exists(file_path):
     #     print('返回缓存文件')
     #     return './gpt_log/arxiv/'+title_str
@@ -55,17 +60,16 @@ def download_arxiv_(url_pdf):
     # subprocess.call('aria2c --all-proxy=\"172.18.116.150:11084\" -o \"%s\" %s'%(download_dir+title_str,url_pdf), shell=True)
 
     x = "%s  %s %s.bib" % (paper_id, other_info['year'], other_info['authors'])
-    x = x.replace('?', '？')\
-        .replace(':', '：')\
-        .replace('\"', '“')\
-        .replace('\n', '')\
-        .replace('  ', ' ')\
+    x = x.replace('?', '？') \
+        .replace(':', '：') \
+        .replace('\"', '“') \
+        .replace('\n', '') \
+        .replace('  ', ' ') \
         .replace('  ', ' ')
-    return './gpt_log/arxiv/'+title_str, other_info
+    return './gpt_log/arxiv/' + title_str, other_info
 
 
 def get_name(_url_):
-    import os
     from bs4 import BeautifulSoup
     print('正在获取文献名！')
     print(_url_)
@@ -127,29 +131,26 @@ def get_name(_url_):
     # with open('./arxiv_recall.pkl', 'wb') as f:
     #     pickle.dump(arxiv_recall, f)
 
-    return title_str+'.pdf', other_details
-
+    return title_str + '.pdf', other_details
 
 
 @CatchException
 def 下载arxiv论文并翻译摘要(txt, llm_kwargs, plugin_kwargs, chatbot, history, system_prompt, web_port):
-
     CRAZY_FUNCTION_INFO = "下载arxiv论文并翻译摘要，函数插件作者[binary-husky]。正在提取摘要并下载PDF文档……"
-    import glob
     import os
 
     # 基本信息：功能、贡献者
     chatbot.append(["函数插件功能？", CRAZY_FUNCTION_INFO])
-    yield from update_ui(chatbot=chatbot, history=history) # 刷新界面
+    yield from update_ui(chatbot=chatbot, history=history)  # 刷新界面
 
     # 尝试导入依赖，如果缺少依赖，则给出安装建议
     try:
         import pdfminer, bs4
     except:
-        report_execption(chatbot, history, 
-            a = f"解析项目: {txt}", 
-            b = f"导入软件依赖失败。使用该模块需要额外依赖，安装方法```pip install --upgrade pdfminer beautifulsoup4```。")
-        yield from update_ui(chatbot=chatbot, history=history) # 刷新界面
+        report_execption(chatbot, history,
+                         a=f"解析项目: {txt}",
+                         b=f"导入软件依赖失败。使用该模块需要额外依赖，安装方法```pip install --upgrade pdfminer beautifulsoup4```。")
+        yield from update_ui(chatbot=chatbot, history=history)  # 刷新界面
         return
 
     # 清空历史，以免输入溢出
@@ -159,17 +160,17 @@ def 下载arxiv论文并翻译摘要(txt, llm_kwargs, plugin_kwargs, chatbot, hi
     try:
         pdf_path, info = download_arxiv_(txt)
     except:
-        report_execption(chatbot, history, 
-            a = f"解析项目: {txt}", 
-            b = f"下载pdf文件未成功")
-        yield from update_ui(chatbot=chatbot, history=history) # 刷新界面
+        report_execption(chatbot, history,
+                         a=f"解析项目: {txt}",
+                         b=f"下载pdf文件未成功")
+        yield from update_ui(chatbot=chatbot, history=history)  # 刷新界面
         return
-    
+
     # 翻译摘要等
-    i_say =            f"请你阅读以下学术论文相关的材料，提取摘要，翻译为中文。材料如下：{str(info)}"
-    i_say_show_user =  f'请你阅读以下学术论文相关的材料，提取摘要，翻译为中文。论文：{pdf_path}'
+    i_say = f"请你阅读以下学术论文相关的材料，提取摘要，翻译为中文。材料如下：{str(info)}"
+    i_say_show_user = f'请你阅读以下学术论文相关的材料，提取摘要，翻译为中文。论文：{pdf_path}'
     chatbot.append((i_say_show_user, "[Local Message] waiting gpt response."))
-    yield from update_ui(chatbot=chatbot, history=history) # 刷新界面
+    yield from update_ui(chatbot=chatbot, history=history)  # 刷新界面
     msg = '正常'
     # ** gpt request **
     # 单线，获取文章meta信息
@@ -182,13 +183,14 @@ def 下载arxiv论文并翻译摘要(txt, llm_kwargs, plugin_kwargs, chatbot, hi
     )
 
     chatbot[-1] = (i_say_show_user, gpt_say)
-    history.append(i_say_show_user); history.append(gpt_say)
-    yield from update_ui(chatbot=chatbot, history=history, msg=msg) # 刷新界面
+    history.append(i_say_show_user);
+    history.append(gpt_say)
+    yield from update_ui(chatbot=chatbot, history=history, msg=msg)  # 刷新界面
     # 写入文件
     import shutil
     # 重置文件的创建时间
-    shutil.copyfile(pdf_path, f'./gpt_log/{os.path.basename(pdf_path)}'); os.remove(pdf_path)
+    shutil.copyfile(pdf_path, f'./gpt_log/{os.path.basename(pdf_path)}');
+    os.remove(pdf_path)
     res = write_results_to_file(history)
     chatbot.append(("完成了吗？", res + "\n\nPDF文件也已经下载"))
-    yield from update_ui(chatbot=chatbot, history=history, msg=msg) # 刷新界面
-
+    yield from update_ui(chatbot=chatbot, history=history, msg=msg)  # 刷新界面

@@ -1,9 +1,9 @@
 from toolbox import CatchException, report_execption, write_results_to_file
 from toolbox import update_ui
+from .crazy_utils import read_and_clean_pdf_text
 from .crazy_utils import request_gpt_model_in_new_thread_with_ui_alive
 from .crazy_utils import request_gpt_model_multi_threads_with_very_awesome_ui_and_high_efficiency
-from .crazy_utils import read_and_clean_pdf_text
-from colorful import *
+
 
 @CatchException
 def 批量翻译PDF文档(txt, llm_kwargs, plugin_kwargs, chatbot, history, sys_prompt, web_port):
@@ -14,7 +14,7 @@ def 批量翻译PDF文档(txt, llm_kwargs, plugin_kwargs, chatbot, history, sys_
     chatbot.append([
         "函数插件功能？",
         "批量总结PDF文档。函数插件贡献者: Binary-Husky"])
-    yield from update_ui(chatbot=chatbot, history=history) # 刷新界面
+    yield from update_ui(chatbot=chatbot, history=history)  # 刷新界面
 
     # 尝试导入依赖，如果缺少依赖，则给出安装建议
     try:
@@ -24,7 +24,7 @@ def 批量翻译PDF文档(txt, llm_kwargs, plugin_kwargs, chatbot, history, sys_
         report_execption(chatbot, history,
                          a=f"解析项目: {txt}",
                          b=f"导入软件依赖失败。使用该模块需要额外依赖，安装方法```pip install --upgrade pymupdf tiktoken```。")
-        yield from update_ui(chatbot=chatbot, history=history) # 刷新界面
+        yield from update_ui(chatbot=chatbot, history=history)  # 刷新界面
         return
 
     # 清空历史，以免输入溢出
@@ -38,7 +38,7 @@ def 批量翻译PDF文档(txt, llm_kwargs, plugin_kwargs, chatbot, history, sys_
             txt = '空空如也的输入栏'
         report_execption(chatbot, history,
                          a=f"解析项目: {txt}", b=f"找不到本地项目或无权访问: {txt}")
-        yield from update_ui(chatbot=chatbot, history=history) # 刷新界面
+        yield from update_ui(chatbot=chatbot, history=history)  # 刷新界面
         return
 
     # 搜索需要处理的文件清单
@@ -49,7 +49,7 @@ def 批量翻译PDF文档(txt, llm_kwargs, plugin_kwargs, chatbot, history, sys_
     if len(file_manifest) == 0:
         report_execption(chatbot, history,
                          a=f"解析项目: {txt}", b=f"找不到任何.tex或.pdf文件: {txt}")
-        yield from update_ui(chatbot=chatbot, history=history) # 刷新界面
+        yield from update_ui(chatbot=chatbot, history=history)  # 刷新界面
         return
 
     # 开始正式执行任务
@@ -70,15 +70,18 @@ def 解析PDF(file_manifest, project_folder, llm_kwargs, plugin_kwargs, chatbot,
         from .crazy_utils import breakdown_txt_to_satisfy_token_limit_for_pdf
         from toolbox import get_conf
         enc = tiktoken.encoding_for_model(*get_conf('LLM_MODEL'))
-        def get_token_num(txt): return len(enc.encode(txt, disallowed_special=()))
+
+        def get_token_num(txt):
+            return len(enc.encode(txt, disallowed_special=()))
+
         paper_fragments = breakdown_txt_to_satisfy_token_limit_for_pdf(
-            txt=file_content,  get_token_fn=get_token_num, limit=TOKEN_LIMIT_PER_FRAGMENT)
+            txt=file_content, get_token_fn=get_token_num, limit=TOKEN_LIMIT_PER_FRAGMENT)
         page_one_fragments = breakdown_txt_to_satisfy_token_limit_for_pdf(
-            txt=str(page_one), get_token_fn=get_token_num, limit=TOKEN_LIMIT_PER_FRAGMENT//4)
+            txt=str(page_one), get_token_fn=get_token_num, limit=TOKEN_LIMIT_PER_FRAGMENT // 4)
 
         # 为了更好的效果，我们剥离Introduction之后的部分（如果有）
         paper_meta = page_one_fragments[0].split('introduction')[0].split('Introduction')[0].split('INTRODUCTION')[0]
-        
+
         # 单线，获取文章meta信息
         paper_meta_info = yield from request_gpt_model_in_new_thread_with_ui_alive(
             inputs=f"以下是一篇学术论文的基础信息，请从中提取出“标题”、“收录会议或期刊”、“作者”、“摘要”、“编号”、“作者邮箱”这六个部分。请用markdown格式输出，最后用中文翻译摘要部分。请提取：{paper_meta}",
@@ -92,7 +95,8 @@ def 解析PDF(file_manifest, project_folder, llm_kwargs, plugin_kwargs, chatbot,
         gpt_response_collection = yield from request_gpt_model_multi_threads_with_very_awesome_ui_and_high_efficiency(
             inputs_array=[
                 f"以下是你需要翻译的论文片段：\n{frag}" for frag in paper_fragments],
-            inputs_show_user_array=[f"\n---\n 原文： \n\n {frag.replace('#', '')}  \n---\n 翻译：\n " for frag in paper_fragments],
+            inputs_show_user_array=[f"\n---\n 原文： \n\n {frag.replace('#', '')}  \n---\n 翻译：\n " for frag in
+                                    paper_fragments],
             llm_kwargs=llm_kwargs,
             chatbot=chatbot,
             history_array=[[paper_meta] for _ in paper_fragments],
@@ -102,9 +106,10 @@ def 解析PDF(file_manifest, project_folder, llm_kwargs, plugin_kwargs, chatbot,
         )
 
         # 整理报告的格式
-        for i,k in enumerate(gpt_response_collection): 
-            if i%2==0:
-                gpt_response_collection[i] = f"\n\n---\n\n ## 原文[{i//2}/{len(gpt_response_collection)//2}]： \n\n {paper_fragments[i//2].replace('#', '')}  \n\n---\n\n ## 翻译[{i//2}/{len(gpt_response_collection)//2}]：\n "
+        for i, k in enumerate(gpt_response_collection):
+            if i % 2 == 0:
+                gpt_response_collection[
+                    i] = f"\n\n---\n\n ## 原文[{i // 2}/{len(gpt_response_collection) // 2}]： \n\n {paper_fragments[i // 2].replace('#', '')}  \n\n---\n\n ## 翻译[{i // 2}/{len(gpt_response_collection) // 2}]：\n "
             else:
                 gpt_response_collection[i] = gpt_response_collection[i]
         final = ["一、论文概况\n\n---\n\n", paper_meta_info.replace('# ', '### ') + '\n\n---\n\n', "二、论文翻译", ""]
@@ -115,7 +120,7 @@ def 解析PDF(file_manifest, project_folder, llm_kwargs, plugin_kwargs, chatbot,
         # 更新UI
         generated_conclusion_files.append(f'./gpt_log/{create_report_file_name}')
         chatbot.append((f"{fp}完成了吗？", res))
-        yield from update_ui(chatbot=chatbot, history=history) # 刷新界面
+        yield from update_ui(chatbot=chatbot, history=history)  # 刷新界面
 
     # 准备文件的下载
     import shutil
@@ -128,4 +133,4 @@ def 解析PDF(file_manifest, project_folder, llm_kwargs, plugin_kwargs, chatbot,
         if os.path.exists(pdf_path):
             os.remove(pdf_path)
     chatbot.append(("给出输出文件清单", str(generated_conclusion_files)))
-    yield from update_ui(chatbot=chatbot, history=history) # 刷新界面
+    yield from update_ui(chatbot=chatbot, history=history)  # 刷新界面

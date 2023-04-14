@@ -3,14 +3,13 @@ from typing import Any, Dict, List, Optional, Tuple, Type, Union
 import gym
 import numpy as np
 import torch as th
-from torch.nn import functional as F
-
 from stable_baselines3.common import logger
 from stable_baselines3.common.off_policy_algorithm import OffPolicyAlgorithm
 from stable_baselines3.common.preprocessing import maybe_transpose
 from stable_baselines3.common.type_aliases import GymEnv, MaybeCallback, Schedule
 from stable_baselines3.common.utils import get_linear_fn, is_vectorized_observation, polyak_update
 from stable_baselines3.dqn.policies import DQNPolicy
+from torch.nn import functional as F
 
 
 class DQN(OffPolicyAlgorithm):
@@ -56,30 +55,30 @@ class DQN(OffPolicyAlgorithm):
     """
 
     def __init__(
-        self,
-        policy: Union[str, Type[DQNPolicy]],
-        env: Union[GymEnv, str],
-        learning_rate: Union[float, Schedule] = 1e-4,
-        buffer_size: int = 1000000,
-        learning_starts: int = 50000,
-        batch_size: Optional[int] = 32,
-        tau: float = 1.0,
-        gamma: float = 0.99,
-        train_freq: Union[int, Tuple[int, str]] = 4,
-        gradient_steps: int = 1,
-        optimize_memory_usage: bool = False,
-        target_update_interval: int = 10000,
-        exploration_fraction: float = 0.1,
-        exploration_initial_eps: float = 1.0,
-        exploration_final_eps: float = 0.05,
-        max_grad_norm: float = 10,
-        tensorboard_log: Optional[str] = None,
-        create_eval_env: bool = False,
-        policy_kwargs: Optional[Dict[str, Any]] = None,
-        verbose: int = 0,
-        seed: Optional[int] = None,
-        device: Union[th.device, str] = "auto",
-        _init_setup_model: bool = True,
+            self,
+            policy: Union[str, Type[DQNPolicy]],
+            env: Union[GymEnv, str],
+            learning_rate: Union[float, Schedule] = 1e-4,
+            buffer_size: int = 1000000,
+            learning_starts: int = 50000,
+            batch_size: Optional[int] = 32,
+            tau: float = 1.0,
+            gamma: float = 0.99,
+            train_freq: Union[int, Tuple[int, str]] = 4,
+            gradient_steps: int = 1,
+            optimize_memory_usage: bool = False,
+            target_update_interval: int = 10000,
+            exploration_fraction: float = 0.1,
+            exploration_initial_eps: float = 1.0,
+            exploration_final_eps: float = 0.05,
+            max_grad_norm: float = 10,
+            tensorboard_log: Optional[str] = None,
+            create_eval_env: bool = False,
+            policy_kwargs: Optional[Dict[str, Any]] = None,
+            verbose: int = 0,
+            seed: Optional[int] = None,
+            device: Union[th.device, str] = "auto",
+            _init_setup_model: bool = True,
     ):
 
         super(DQN, self).__init__(
@@ -185,11 +184,11 @@ class DQN(OffPolicyAlgorithm):
         logger.record("train/loss", np.mean(losses))
 
     def predict(
-        self,
-        observation: np.ndarray,
-        state: Optional[np.ndarray] = None,
-        mask: Optional[np.ndarray] = None,
-        deterministic: bool = False,
+            self,
+            observation: np.ndarray,
+            state: Optional[np.ndarray] = None,
+            mask: Optional[np.ndarray] = None,
+            deterministic: bool = False,
     ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
         """
         Overrides the base_class predict function to include epsilon-greedy exploration.
@@ -212,16 +211,16 @@ class DQN(OffPolicyAlgorithm):
         return action, state
 
     def learn(
-        self,
-        total_timesteps: int,
-        callback: MaybeCallback = None,
-        log_interval: int = 4,
-        eval_env: Optional[GymEnv] = None,
-        eval_freq: int = -1,
-        n_eval_episodes: int = 5,
-        tb_log_name: str = "DQN",
-        eval_log_path: Optional[str] = None,
-        reset_num_timesteps: bool = True,
+            self,
+            total_timesteps: int,
+            callback: MaybeCallback = None,
+            log_interval: int = 4,
+            eval_env: Optional[GymEnv] = None,
+            eval_freq: int = -1,
+            n_eval_episodes: int = 5,
+            tb_log_name: str = "DQN",
+            eval_log_path: Optional[str] = None,
+            reset_num_timesteps: bool = True,
     ) -> OffPolicyAlgorithm:
 
         return super(DQN, self).learn(

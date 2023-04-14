@@ -1,40 +1,40 @@
 # chatgpt-academic项目自译解报告
+
 （Author补充：以下分析均由本项目调用ChatGPT一键生成，如果有不准确的地方，全怪GPT😄）
 
 ## 对程序的整体功能和构架做出概括。然后用一张markdown表格整理每个文件的功能（包括'check_proxy.py', 'config.py'等）。
 
 整体概括：
 
-该程序是一个基于自然语言处理和机器学习的科学论文辅助工具，主要功能包括聊天机器人、批量总结PDF文档、批量翻译PDF文档、生成函数注释、解析项目源代码等。程序基于 Gradio 构建 Web 服务，并集成了代理和自动更新功能，提高了用户的使用体验。
+该程序是一个基于自然语言处理和机器学习的科学论文辅助工具，主要功能包括聊天机器人、批量总结PDF文档、批量翻译PDF文档、生成函数注释、解析项目源代码等。程序基于
+Gradio 构建 Web 服务，并集成了代理和自动更新功能，提高了用户的使用体验。
 
 文件功能表格：
 
-| 文件名称                                                     | 功能                                                         |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| .\check_proxy.py                                             | 检查代理设置功能。                                           |
-| .\config.py                                                  | 配置文件，存储程序的基本设置。                               |
-| .\config_private.py                                          | 存储代理网络地址的文件。                                     |
-| .\core_functional.py                                         | 主要的程序逻辑，包括聊天机器人和文件处理。                  |
-| .\cradle.py                                                  | 程序入口，初始化程序和启动 Web 服务。                        |
-| .\crazy_functional.py                                        | 辅助程序功能，包括PDF文档处理、代码处理、函数注释生成等。  |
-| .\main.py                                                    | 包含聊天机器人的具体实现。                                   |
-| .\show_math.py                                               | 处理 LaTeX 公式的函数。                                      |
-| .\theme.py                                                   | 存储 Gradio Web 服务的 CSS 样式文件。                        |
-| .\toolbox.py                                                 | 提供了一系列工具函数，包括文件读写、网页抓取、解析函数参数、生成 HTML 等。 |
-| ./crazy_functions/crazy_utils.py                             | 提供各种工具函数，如解析字符串、清洗文本、清理目录结构等。 |
-| ./crazy_functions/\_\_init\_\_.py                             | crazy_functions 模块的入口文件。                            |
-| ./crazy_functions/下载arxiv论文翻译摘要.py                 | 对 arxiv.org 上的 PDF 论文进行下载和翻译。                   |
-| ./crazy_functions/代码重写为全英文_多线程.py                | 将代码文件中的中文注释和字符串替换为英文。                   |
-| ./crazy_functions/总结word文档.py                            | 读取 Word 文档并生成摘要。                                    |
-| ./crazy_functions/批量总结PDF文档.py                        | 批量读取 PDF 文件并生成摘要。                                 |
-| ./crazy_functions/批量总结PDF文档pdfminer.py                | 使用 pdfminer 库进行 PDF 文件处理。                        |
-| ./crazy_functions/批量翻译PDF文档_多线程.py                 | 使用多线程技术批量翻译 PDF 文件。                             |
-| ./crazy_functions/生成函数注释.py                           | 给 Python 函数自动生成说明文档。                             |
-| ./crazy_functions/解析项目源代码.py                         | 解析项目中的源代码，提取注释和函数名等信息。                  |
-| ./crazy_functions/读文章写摘要.py                           | 读取多个文本文件并生成对应的摘要。                             |
-| ./crazy_functions/高级功能函数模板.py                        | 使用 GPT 模型进行文本处理。                                  |
-
-
+| 文件名称                                   | 功能                                       |
+|----------------------------------------|------------------------------------------|
+| .\check_proxy.py                       | 检查代理设置功能。                                |
+| .\config.py                            | 配置文件，存储程序的基本设置。                          |
+| .\config_private.py                    | 存储代理网络地址的文件。                             |
+| .\core_functional.py                   | 主要的程序逻辑，包括聊天机器人和文件处理。                    |
+| .\cradle.py                            | 程序入口，初始化程序和启动 Web 服务。                    |
+| .\crazy_functional.py                  | 辅助程序功能，包括PDF文档处理、代码处理、函数注释生成等。           |
+| .\main.py                              | 包含聊天机器人的具体实现。                            |
+| .\show_math.py                         | 处理 LaTeX 公式的函数。                          |
+| .\theme.py                             | 存储 Gradio Web 服务的 CSS 样式文件。              |
+| .\toolbox.py                           | 提供了一系列工具函数，包括文件读写、网页抓取、解析函数参数、生成 HTML 等。 |
+| ./crazy_functions/crazy_utils.py       | 提供各种工具函数，如解析字符串、清洗文本、清理目录结构等。            |
+| ./crazy_functions/\_\_init\_\_.py      | crazy_functions 模块的入口文件。                 |
+| ./crazy_functions/下载arxiv论文翻译摘要.py     | 对 arxiv.org 上的 PDF 论文进行下载和翻译。            |
+| ./crazy_functions/代码重写为全英文_多线程.py      | 将代码文件中的中文注释和字符串替换为英文。                    |
+| ./crazy_functions/总结word文档.py          | 读取 Word 文档并生成摘要。                         |
+| ./crazy_functions/批量总结PDF文档.py         | 批量读取 PDF 文件并生成摘要。                        |
+| ./crazy_functions/批量总结PDF文档pdfminer.py | 使用 pdfminer 库进行 PDF 文件处理。                |
+| ./crazy_functions/批量翻译PDF文档_多线程.py     | 使用多线程技术批量翻译 PDF 文件。                      |
+| ./crazy_functions/生成函数注释.py            | 给 Python 函数自动生成说明文档。                     |
+| ./crazy_functions/解析项目源代码.py           | 解析项目中的源代码，提取注释和函数名等信息。                   |
+| ./crazy_functions/读文章写摘要.py            | 读取多个文本文件并生成对应的摘要。                        |
+| ./crazy_functions/高级功能函数模板.py          | 使用 GPT 模型进行文本处理。                         |
 
 ## [0/22] 程序概述: check_proxy.py
 
@@ -69,24 +69,29 @@ auto_update函数主要用于检查程序更新，会从Github获取程序最新
 
 ## [3/22] 程序概述: core_functional.py
 
-该程序文件名为`core_functional.py`，主要是定义了一些核心功能函数，包括英语和中文学术润色、查找语法错误、中译英、学术中英互译、英译中、找图片和解释代码等。每个功能都有一个`Prefix`属性和`Suffix`属性，`Prefix`是指在用户输入的任务前面要显示的文本，`Suffix`是指在任务后面要显示的文本。此外，还有一个`Color`属性指示按钮的颜色，以及一个`PreProcess`函数表示对输入进行预处理的函数。
+该程序文件名为`core_functional.py`
+，主要是定义了一些核心功能函数，包括英语和中文学术润色、查找语法错误、中译英、学术中英互译、英译中、找图片和解释代码等。每个功能都有一个`Prefix`
+属性和`Suffix`属性，`Prefix`是指在用户输入的任务前面要显示的文本，`Suffix`是指在任务后面要显示的文本。此外，还有一个`Color`
+属性指示按钮的颜色，以及一个`PreProcess`函数表示对输入进行预处理的函数。
 
 ## [4/22] 程序概述: cradle.py
 
 该程序文件名为cradle.py，主要功能是检测当前版本与远程最新版本是否一致，如果不一致则输出新版本信息并提示更新。其流程大致如下：
 
-1. 导入相关模块与自定义工具箱函数get_conf 
-2. 读取配置文件中的代理proxies 
-3. 使用requests模块请求远程版本信息（url为https://raw.githubusercontent.com/binary-husky/chatgpt_academic/master/version）并加载为json格式 
-4. 获取远程版本号、是否显示新功能信息、新功能内容 
-5. 读取本地版本文件version并加载为json格式 
-6. 获取当前版本号 
-7. 比较当前版本与远程版本，如果远程版本号比当前版本号高0.05以上，则输出新版本信息并提示更新 
+1. 导入相关模块与自定义工具箱函数get_conf
+2. 读取配置文件中的代理proxies
+3. 使用requests模块请求远程版本信息（url为https:
+   //raw.githubusercontent.com/binary-husky/chatgpt_academic/master/version）并加载为json格式
+4. 获取远程版本号、是否显示新功能信息、新功能内容
+5. 读取本地版本文件version并加载为json格式
+6. 获取当前版本号
+7. 比较当前版本与远程版本，如果远程版本号比当前版本号高0.05以上，则输出新版本信息并提示更新
 8. 如果不需要更新，则直接返回
 
 ## [5/22] 程序概述: crazy_functional.py
 
-该程序文件名为.\crazy_functional.py，主要定义了一个名为get_crazy_functions()的函数，该函数返回一个字典类型的变量function_plugins，其中包含了一些函数插件。
+该程序文件名为.\crazy_functional.py，主要定义了一个名为get_crazy_functions()
+的函数，该函数返回一个字典类型的变量function_plugins，其中包含了一些函数插件。
 
 一些重要的函数插件包括：
 
@@ -122,7 +127,8 @@ auto_update函数主要用于检查程序更新，会从Github获取程序最新
 
 ## [7/22] 程序概述: show_math.py
 
-该程序是一个Python脚本，文件名为show_math.py。它转换Markdown和LaTeX混合语法到带MathML的HTML。程序使用latex2mathml模块来实现从LaTeX到MathML的转换，将符号转换为HTML实体以批量处理。程序利用正则表达式和递归函数的方法处理不同形式的LaTeX语法，支持以下四种情况：$$形式、$形式、\[..]形式和\(...\)形式。如果无法转换某个公式，则在该位置插入一条错误消息。最后，程序输出HTML字符串。
+该程序是一个Python脚本，文件名为show_math.py。它转换Markdown和LaTeX混合语法到带MathML的HTML。程序使用latex2mathml模块来实现从LaTeX到MathML的转换，将符号转换为HTML实体以批量处理。程序利用正则表达式和递归函数的方法处理不同形式的LaTeX语法，支持以下四种情况：$$形式、$形式、\[..]
+形式和\(...\)形式。如果无法转换某个公式，则在该位置插入一条错误消息。最后，程序输出HTML字符串。
 
 ## [8/22] 程序概述: theme.py
 
@@ -152,7 +158,8 @@ auto_update函数主要用于检查程序更新，会从Github获取程序最新
 
 10. markdown_convertion：一个函数，将Markdown格式的文本转换为HTML格式。如果包含数学公式，则先将公式转换为HTML格式。
 
-11. close_up_code_segment_during_stream：一个函数，用于在gpt输出代码的中途，即输出了前面的```，但还没输出完后面的```，补上后面的```。
+11. close_up_code_segment_during_stream：一个函数，用于在gpt输出代码的中途，即输出了前面的```，但还没输出完后面的```
+    ，补上后面的```。
 
 12. format_io：一个函数，将输入和输出解析为HTML格式。将输出部分的Markdown和数学公式转换为HTML格式。
 
@@ -167,28 +174,43 @@ auto_update函数主要用于检查程序更新，会从Github获取程序最新
 ## [10/22] 程序概述: crazy_functions\crazy_utils.py
 
 这是一个名为"crazy_utils.py"的Python程序文件，包含了两个函数：
+
 1. `breakdown_txt_to_satisfy_token_limit()`：接受文本字符串、计算文本单词数量的函数和单词数量限制作为输入参数，将长文本拆分成合适的长度，以满足单词数量限制。这个函数使用一个递归方法去拆分长文本。
-2. `breakdown_txt_to_satisfy_token_limit_for_pdf()`：类似于`breakdown_txt_to_satisfy_token_limit()`，但是它使用一个不同的递归方法来拆分长文本，以满足PDF文档中的需求。当出现无法继续拆分的情况时，该函数将使用一个中文句号标记插入文本来截断长文本。如果还是无法拆分，则会引发运行时异常。
+2. `breakdown_txt_to_satisfy_token_limit_for_pdf()`：类似于`breakdown_txt_to_satisfy_token_limit()`
+   ，但是它使用一个不同的递归方法来拆分长文本，以满足PDF文档中的需求。当出现无法继续拆分的情况时，该函数将使用一个中文句号标记插入文本来截断长文本。如果还是无法拆分，则会引发运行时异常。
 
 ## [11/22] 程序概述: crazy_functions\__init__.py
 
-这个程序文件是一个 Python 的包，包名为 "crazy_functions"，并且是其中的一个子模块 "__init__.py"。该包中可能包含多个函数或类，用于实现各种疯狂的功能。由于该文件的具体代码没有给出，因此无法进一步确定该包中的功能。通常情况下，一个包应该具有 __init__.py、__main__.py 和其它相关的模块文件，用于实现该包的各种功能。
+这个程序文件是一个 Python 的包，包名为 "crazy_functions"，并且是其中的一个子模块 "__init__.py"
+。该包中可能包含多个函数或类，用于实现各种疯狂的功能。由于该文件的具体代码没有给出，因此无法进一步确定该包中的功能。通常情况下，一个包应该具有
+__init__.py、__main__.py 和其它相关的模块文件，用于实现该包的各种功能。
 
 ## [12/22] 程序概述: crazy_functions\下载arxiv论文翻译摘要.py
 
-这个程序实现的功能是下载arxiv论文并翻译摘要，文件名为`下载arxiv论文翻译摘要.py`。这个程序引入了`requests`、`unicodedata`、`os`、`re`等Python标准库，以及`pdfminer`、`bs4`等第三方库。其中`download_arxiv_`函数主要实现了从arxiv网站下载论文的功能，包括解析链接、获取论文信息、下载论文和生成文件名等，`get_name`函数则是为了从arxiv网站中获取论文信息创建的辅助函数。`下载arxiv论文并翻译摘要`函数则是实现了从下载好的PDF文件中提取摘要，然后使用预先训练的GPT模型翻译为中文的功能。同时，该函数还会将历史记录写入文件中。函数还会通过`CatchException`函数来捕获程序中出现的异常信息。
+这个程序实现的功能是下载arxiv论文并翻译摘要，文件名为`下载arxiv论文翻译摘要.py`
+。这个程序引入了`requests`、`unicodedata`、`os`、`re`等Python标准库，以及`pdfminer`、`bs4`等第三方库。其中`download_arxiv_`
+函数主要实现了从arxiv网站下载论文的功能，包括解析链接、获取论文信息、下载论文和生成文件名等，`get_name`
+函数则是为了从arxiv网站中获取论文信息创建的辅助函数。`下载arxiv论文并翻译摘要`
+函数则是实现了从下载好的PDF文件中提取摘要，然后使用预先训练的GPT模型翻译为中文的功能。同时，该函数还会将历史记录写入文件中。函数还会通过`CatchException`
+函数来捕获程序中出现的异常信息。
 
 ## [13/22] 程序概述: crazy_functions\代码重写为全英文_多线程.py
 
-该程序文件为一个Python多线程程序，文件名为"crazy_functions\代码重写为全英文_多线程.py"。该程序使用了多线程技术，将一个大任务拆成多个小任务，同时执行，提高运行效率。
+该程序文件为一个Python多线程程序，文件名为"crazy_functions\代码重写为全英文_多线程.py"
+。该程序使用了多线程技术，将一个大任务拆成多个小任务，同时执行，提高运行效率。
 
-程序的主要功能是将Python文件中的中文转换为英文，同时将转换后的代码输出。程序先清空历史记录，然后尝试导入openai和transformers等依赖库。程序接下来会读取当前路径下的.py文件和crazy_functions文件夹中的.py文件，并将其整合成一个文件清单。随后程序会使用GPT2模型进行中英文的翻译，并将结果保存在本地路径下的"gpt_log/generated_english_version"文件夹中。程序最终会生成一个任务执行报告。
+程序的主要功能是将Python文件中的中文转换为英文，同时将转换后的代码输出。程序先清空历史记录，然后尝试导入openai和transformers等依赖库。程序接下来会读取当前路径下的.py文件和crazy_functions文件夹中的.py文件，并将其整合成一个文件清单。随后程序会使用GPT2模型进行中英文的翻译，并将结果保存在本地路径下的"
+gpt_log/generated_english_version"文件夹中。程序最终会生成一个任务执行报告。
 
 需要注意的是，该程序依赖于"request_llm"和"toolbox"库以及本地的"crazy_utils"模块。
 
 ## [14/22] 程序概述: crazy_functions\总结word文档.py
 
-该程序文件是一个 Python 脚本文件，文件名为 ./crazy_functions/总结word文档.py。该脚本是一个函数插件，提供了名为“总结word文档”的函数。该函数的主要功能是批量读取给定文件夹下的 Word 文档文件，并使用 GPT 模型生成对每个文件的概述和意见建议。其中涉及到了读取 Word 文档、使用 GPT 模型等操作，依赖于许多第三方库。该文件也提供了导入依赖的方法，使用该脚本需要安装依赖库 python-docx 和 pywin32。函数功能实现的过程中，使用了一些用于调试的变量（如 fast_debug），可在需要时设置为 True。该脚本文件也提供了对程序功能和贡献者的注释。
+该程序文件是一个 Python 脚本文件，文件名为
+./crazy_functions/总结word文档.py。该脚本是一个函数插件，提供了名为“总结word文档”的函数。该函数的主要功能是批量读取给定文件夹下的
+Word 文档文件，并使用 GPT 模型生成对每个文件的概述和意见建议。其中涉及到了读取 Word 文档、使用 GPT
+模型等操作，依赖于许多第三方库。该文件也提供了导入依赖的方法，使用该脚本需要安装依赖库 python-docx 和
+pywin32。函数功能实现的过程中，使用了一些用于调试的变量（如 fast_debug），可在需要时设置为 True。该脚本文件也提供了对程序功能和贡献者的注释。
 
 ## [15/22] 程序概述: crazy_functions\批量总结PDF文档.py
 
@@ -197,10 +219,13 @@ auto_update函数主要用于检查程序更新，会从Github获取程序最新
 1. `is_paragraph_break(match)`：根据给定的匹配结果判断换行符是否表示段落分隔。
 2. `normalize_text(text)`：通过将文本特殊符号转换为其基本形式来对文本进行归一化处理。
 3. `clean_text(raw_text)`：对从 PDF 提取出的原始文本进行清洗和格式化处理。
-4. `解析PDF(file_manifest, project_folder, top_p, temperature, chatbot, history, systemPromptTxt)`：对给定的PDF文件进行分析并生成相应的概述。
+4. `解析PDF(file_manifest, project_folder, top_p, temperature, chatbot, history, systemPromptTxt)`
+   ：对给定的PDF文件进行分析并生成相应的概述。
 5. `批量总结PDF文档(txt, top_p, temperature, chatbot, history, systemPromptTxt, WEB_PORT)`：批量处理PDF文件，对其进行摘要生成。
 
-其中，主要用到了第三方库`pymupdf`对PDF文件进行处理。程序通过调用`fitz.open`函数打开PDF文件，使用`page.get_text()`方法获取PDF文本内容。然后，使用`clean_text`函数对文本进行清洗和格式化处理，生成最终的摘要。最后，调用`write_results_to_file`函数将历史记录写入文件并输出。
+其中，主要用到了第三方库`pymupdf`对PDF文件进行处理。程序通过调用`fitz.open`函数打开PDF文件，使用`page.get_text()`
+方法获取PDF文本内容。然后，使用`clean_text`函数对文本进行清洗和格式化处理，生成最终的摘要。最后，调用`write_results_to_file`
+函数将历史记录写入文件并输出。
 
 ## [16/22] 程序概述: crazy_functions\批量总结PDF文档pdfminer.py
 
@@ -208,19 +233,27 @@ auto_update函数主要用于检查程序更新，会从Github获取程序最新
 
 ## [17/22] 程序概述: crazy_functions\批量翻译PDF文档_多线程.py
 
-这是一个 Python 程序文件，文件名为 `批量翻译PDF文档_多线程.py`，包含多个函数。主要功能是批量处理 PDF 文档，解析其中的文本，进行清洗和格式化处理，并使用 OpenAI 的 GPT 模型进行翻译。其中使用了多线程技术来提高程序的效率和并行度。
+这是一个 Python 程序文件，文件名为 `批量翻译PDF文档_多线程.py`，包含多个函数。主要功能是批量处理 PDF
+文档，解析其中的文本，进行清洗和格式化处理，并使用 OpenAI 的 GPT 模型进行翻译。其中使用了多线程技术来提高程序的效率和并行度。
 
 ## [18/22] 程序概述: crazy_functions\生成函数注释.py
 
 该程序文件名为./crazy_functions\生成函数注释.py。该文件包含两个函数，分别为`生成函数注释`和`批量生成函数注释`。
 
-函数`生成函数注释`包含参数`file_manifest`、`project_folder`、`top_p`、`temperature`、`chatbot`、`history`和`systemPromptTxt`。其中，`file_manifest`为一个包含待处理文件路径的列表，`project_folder`表示项目文件夹路径，`top_p`和`temperature`是GPT模型参数，`chatbot`为与用户交互的聊天机器人，`history`记录聊天机器人与用户的历史记录，`systemPromptTxt`为聊天机器人发送信息前的提示语。`生成函数注释`通过读取文件内容，并调用GPT模型对文件中的所有函数生成注释，最后使用markdown表格输出结果。函数中还包含一些条件判断和计时器，以及调用其他自定义模块的函数。
+函数`生成函数注释`包含参数`file_manifest`、`project_folder`、`top_p`、`temperature`、`chatbot`、`history`和`systemPromptTxt`
+。其中，`file_manifest`为一个包含待处理文件路径的列表，`project_folder`表示项目文件夹路径，`top_p`和`temperature`
+是GPT模型参数，`chatbot`为与用户交互的聊天机器人，`history`记录聊天机器人与用户的历史记录，`systemPromptTxt`
+为聊天机器人发送信息前的提示语。`生成函数注释`
+通过读取文件内容，并调用GPT模型对文件中的所有函数生成注释，最后使用markdown表格输出结果。函数中还包含一些条件判断和计时器，以及调用其他自定义模块的函数。
 
-函数`批量生成函数注释`包含参数`txt`、`top_p`、`temperature`、`chatbot`、`history`、`systemPromptTxt`和`WEB_PORT`。其中，`txt`表示用户输入的项目文件夹路径，其他参数含义与`生成函数注释`中相同。`批量生成函数注释`主要是通过解析项目文件夹，获取所有待处理文件的路径，并调用函数`生成函数注释`对每个文件进行处理，最终生成注释表格输出给用户。
+函数`批量生成函数注释`包含参数`txt`、`top_p`、`temperature`、`chatbot`、`history`、`systemPromptTxt`和`WEB_PORT`。其中，`txt`
+表示用户输入的项目文件夹路径，其他参数含义与`生成函数注释`中相同。`批量生成函数注释`
+主要是通过解析项目文件夹，获取所有待处理文件的路径，并调用函数`生成函数注释`对每个文件进行处理，最终生成注释表格输出给用户。
 
 ## [19/22] 程序概述: crazy_functions\解析项目源代码.py
 
-该程序文件包含了多个函数，用于解析不同类型的项目，如Python项目、C项目、Java项目等。其中，最核心的函数是`解析源代码()`，它会对给定的一组文件进行分析，并返回对应的结果。具体流程如下：
+该程序文件包含了多个函数，用于解析不同类型的项目，如Python项目、C项目、Java项目等。其中，最核心的函数是`解析源代码()`
+，它会对给定的一组文件进行分析，并返回对应的结果。具体流程如下：
 
 1. 遍历所有待分析的文件，对每个文件进行如下处理：
 
@@ -236,7 +269,9 @@ auto_update函数主要用于检查程序更新，会从Github获取程序最新
 
 3. 返回机器人会话列表和历史记录。
 
-除此之外，该程序文件还定义了若干个函数，用于针对不同类型的项目进行解析。这些函数会按照不同的方式调用`解析源代码()`函数。例如，对于Python项目，只需要分析.py文件；对于C项目，需要同时分析.h和.cpp文件等。每个函数中都会首先根据给定的项目路径读取相应的文件，然后调用`解析源代码()`函数进行分析。
+除此之外，该程序文件还定义了若干个函数，用于针对不同类型的项目进行解析。这些函数会按照不同的方式调用`解析源代码()`
+函数。例如，对于Python项目，只需要分析.py文件；对于C项目，需要同时分析.h和.cpp文件等。每个函数中都会首先根据给定的项目路径读取相应的文件，然后调用`解析源代码()`
+函数进行分析。
 
 ## [20/22] 程序概述: crazy_functions\读文章写摘要.py
 
@@ -246,9 +281,12 @@ auto_update函数主要用于检查程序更新，会从Github获取程序最新
 
 该程序文件为一个高级功能函数模板，文件名为"./crazy_functions\高级功能函数模板.py"。
 
-该文件导入了两个模块，分别是"request_llm.bridge_chatgpt"和"toolbox"。其中"request_llm.bridge_chatgpt"模块包含了一个函数"predict_no_ui_long_connection"，该函数用于请求GPT模型进行对话生成。"toolbox"模块包含了三个函数，分别是"catchException"、"report_exception"和"write_results_to_file"函数，这三个函数主要用于异常处理和日志记录等。
+该文件导入了两个模块，分别是"request_llm.bridge_chatgpt"和"toolbox"。其中"request_llm.bridge_chatgpt"模块包含了一个函数"
+predict_no_ui_long_connection"，该函数用于请求GPT模型进行对话生成。"toolbox"模块包含了三个函数，分别是"catchException"、"
+report_exception"和"write_results_to_file"函数，这三个函数主要用于异常处理和日志记录等。
 
-该文件定义了一个名为"高阶功能模板函数"的函数，并通过"decorator"装饰器将该函数装饰为一个异常处理函数，可以处理函数执行过程中出现的错误。该函数的作用是生成历史事件查询的问题，并向用户询问历史中哪些事件发生在指定日期，并索要相关图片。在查询完所有日期后，该函数返回所有历史事件及其相关图片的列表。其中，该函数的输入参数包括：
+该文件定义了一个名为"高阶功能模板函数"的函数，并通过"decorator"
+装饰器将该函数装饰为一个异常处理函数，可以处理函数执行过程中出现的错误。该函数的作用是生成历史事件查询的问题，并向用户询问历史中哪些事件发生在指定日期，并索要相关图片。在查询完所有日期后，该函数返回所有历史事件及其相关图片的列表。其中，该函数的输入参数包括：
 
 1. txt: 一个字符串，表示当前消息的文本内容。
 2. top_p: 一个浮点数，表示GPT模型生成文本时的"top_p"参数。
@@ -258,5 +296,9 @@ auto_update函数主要用于检查程序更新，会从Github获取程序最新
 6. systemPromptTxt: 一个字符串，表示当前对话的系统提示信息。
 7. WEB_PORT: 一个整数，表示当前应用程序的WEB端口号。
 
-该函数在执行过程中，会先清空历史记录，以免输入溢出。然后，它会循环5次，生成5个历史事件查询的问题，并向用户请求输入相关信息。每次询问不携带之前的询问历史。在生成每个问题时，该函数会向"chatbot"列表中添加一条消息记录，并设置该记录的初始状态为"[Local Message] waiting gpt response."。然后，该函数会调用"predict_no_ui_long_connection"函数向GPT模型请求生成一段文本，并将生成的文本作为回答。如果请求过程中出现异常，该函数会忽略异常。最后，该函数将问题和回答添加到"chatbot"列表和"history"列表中，并将"chatbot"和"history"列表作为函数的返回值返回。
+该函数在执行过程中，会先清空历史记录，以免输入溢出。然后，它会循环5次，生成5个历史事件查询的问题，并向用户请求输入相关信息。每次询问不携带之前的询问历史。在生成每个问题时，该函数会向"
+chatbot"列表中添加一条消息记录，并设置该记录的初始状态为"[Local Message] waiting gpt response."。然后，该函数会调用"
+predict_no_ui_long_connection"
+函数向GPT模型请求生成一段文本，并将生成的文本作为回答。如果请求过程中出现异常，该函数会忽略异常。最后，该函数将问题和回答添加到"
+chatbot"列表和"history"列表中，并将"chatbot"和"history"列表作为函数的返回值返回。
 

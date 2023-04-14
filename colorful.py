@@ -1,54 +1,87 @@
 import platform
 from sys import stdout
 
-if platform.system()=="Linux":
+if platform.system() == "Linux":
     pass
-else: 
+else:
     from colorama import init
+
     init()
 
+
 # Do you like the elegance of Chinese characters?
-def print红(*kw,**kargs):
-    print("\033[0;31m",*kw,"\033[0m",**kargs)
-def print绿(*kw,**kargs):
-    print("\033[0;32m",*kw,"\033[0m",**kargs)
-def print黄(*kw,**kargs):
-    print("\033[0;33m",*kw,"\033[0m",**kargs)
-def print蓝(*kw,**kargs):
-    print("\033[0;34m",*kw,"\033[0m",**kargs)
-def print紫(*kw,**kargs):
-    print("\033[0;35m",*kw,"\033[0m",**kargs)
-def print靛(*kw,**kargs):
-    print("\033[0;36m",*kw,"\033[0m",**kargs)
-
-def print亮红(*kw,**kargs):
-    print("\033[1;31m",*kw,"\033[0m",**kargs)
-def print亮绿(*kw,**kargs):
-    print("\033[1;32m",*kw,"\033[0m",**kargs)
-def print亮黄(*kw,**kargs):
-    print("\033[1;33m",*kw,"\033[0m",**kargs)
-def print亮蓝(*kw,**kargs):
-    print("\033[1;34m",*kw,"\033[0m",**kargs)
-def print亮紫(*kw,**kargs):
-    print("\033[1;35m",*kw,"\033[0m",**kargs)
-def print亮靛(*kw,**kargs):
-    print("\033[1;36m",*kw,"\033[0m",**kargs)
+def print红(*kw, **kargs):
+    print("\033[0;31m", *kw, "\033[0m", **kargs)
 
 
+def print绿(*kw, **kargs):
+    print("\033[0;32m", *kw, "\033[0m", **kargs)
 
-def print亮红(*kw,**kargs):
-    print("\033[1;31m",*kw,"\033[0m",**kargs)
-def print亮绿(*kw,**kargs):
-    print("\033[1;32m",*kw,"\033[0m",**kargs)
-def print亮黄(*kw,**kargs):
-    print("\033[1;33m",*kw,"\033[0m",**kargs)
-def print亮蓝(*kw,**kargs):
-    print("\033[1;34m",*kw,"\033[0m",**kargs)
-def print亮紫(*kw,**kargs):
-    print("\033[1;35m",*kw,"\033[0m",**kargs)
-def print亮靛(*kw,**kargs):
-    print("\033[1;36m",*kw,"\033[0m",**kargs)
-    
+
+def print黄(*kw, **kargs):
+    print("\033[0;33m", *kw, "\033[0m", **kargs)
+
+
+def print蓝(*kw, **kargs):
+    print("\033[0;34m", *kw, "\033[0m", **kargs)
+
+
+def print紫(*kw, **kargs):
+    print("\033[0;35m", *kw, "\033[0m", **kargs)
+
+
+def print靛(*kw, **kargs):
+    print("\033[0;36m", *kw, "\033[0m", **kargs)
+
+
+def print亮红(*kw, **kargs):
+    print("\033[1;31m", *kw, "\033[0m", **kargs)
+
+
+def print亮绿(*kw, **kargs):
+    print("\033[1;32m", *kw, "\033[0m", **kargs)
+
+
+def print亮黄(*kw, **kargs):
+    print("\033[1;33m", *kw, "\033[0m", **kargs)
+
+
+def print亮蓝(*kw, **kargs):
+    print("\033[1;34m", *kw, "\033[0m", **kargs)
+
+
+def print亮紫(*kw, **kargs):
+    print("\033[1;35m", *kw, "\033[0m", **kargs)
+
+
+def print亮靛(*kw, **kargs):
+    print("\033[1;36m", *kw, "\033[0m", **kargs)
+
+
+def print亮红(*kw, **kargs):
+    print("\033[1;31m", *kw, "\033[0m", **kargs)
+
+
+def print亮绿(*kw, **kargs):
+    print("\033[1;32m", *kw, "\033[0m", **kargs)
+
+
+def print亮黄(*kw, **kargs):
+    print("\033[1;33m", *kw, "\033[0m", **kargs)
+
+
+def print亮蓝(*kw, **kargs):
+    print("\033[1;34m", *kw, "\033[0m", **kargs)
+
+
+def print亮紫(*kw, **kargs):
+    print("\033[1;35m", *kw, "\033[0m", **kargs)
+
+
+def print亮靛(*kw, **kargs):
+    print("\033[1;36m", *kw, "\033[0m", **kargs)
+
+
 print_red = print红
 print_green = print绿
 print_yellow = print黄
@@ -62,7 +95,7 @@ print_bold_yellow = print亮黄
 print_bold_blue = print亮蓝
 print_bold_purple = print亮紫
 print_bold_indigo = print亮靛
-    
+
 if not stdout.isatty():
     # redirection, avoid a fucked up log file
     print红 = print

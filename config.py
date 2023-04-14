@@ -13,12 +13,11 @@ if USE_PROXY:
     # 代理网络的地址，打开你的科学上网软件查看代理的协议(socks5/http)、地址(localhost)和端口(11284)
     proxies = {
         #          [协议]://  [地址]  :[端口]
-        "http":  "socks5h://localhost:11284",
+        "http": "socks5h://localhost:11284",
         "https": "socks5h://localhost:11284",
     }
 else:
     proxies = None
-
 
 # [step 3]>> 以下配置可以优化体验，但大部分场合下并不需要修改
 # 对话窗的高度

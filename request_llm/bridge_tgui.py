@@ -4,15 +4,18 @@ https://github.com/oobabooga/text-generation-webui/pull/175
 '''
 
 import asyncio
+import importlib
 import json
+import logging
 import random
 import string
-import websockets
-import logging
-import time
 import threading
-import importlib
+import time
+
+import websockets
+
 from toolbox import get_conf, update_ui
+
 LLM_MODEL, = get_conf('LLM_MODEL')
 
 # "TGUI:galactica-1.3b@localhost:7860"
@@ -20,9 +23,11 @@ model_name, addr_port = LLM_MODEL.split('@')
 assert ':' in addr_port, "LLM_MODEL 格式不正确！" + LLM_MODEL
 addr, port = addr_port.split(':')
 
+
 def random_hash():
     letters = string.ascii_lowercase + string.digits
     return ''.join(random.choice(letters) for i in range(9))
+
 
 async def run(context, max_token=512):
     params = {
@@ -46,15 +51,15 @@ async def run(context, max_token=512):
 
     async with websockets.connect(f"ws://{addr}:{port}/queue/join") as websocket:
         while content := json.loads(await websocket.recv()):
-            #Python3.10 syntax, replace with if elif on older
-            if content["msg"] ==  "send_hash":
+            # Python3.10 syntax, replace with if elif on older
+            if content["msg"] == "send_hash":
                 await websocket.send(json.dumps({
                     "session_hash": session,
                     "fn_index": 12
                 }))
-            elif content["msg"] ==  "estimation":
+            elif content["msg"] == "estimation":
                 pass
-            elif content["msg"] ==  "send_data":
+            elif content["msg"] == "send_data":
                 await websocket.send(json.dumps({
                     "session_hash": session,
                     "fn_index": 12,
@@ -77,7 +82,7 @@ async def run(context, max_token=512):
                         params['seed'],
                     ]
                 }))
-            elif content["msg"] ==  "process_starts":
+            elif content["msg"] == "process_starts":
                 pass
             elif content["msg"] in ["process_generating", "process_completed"]:
                 yield content["output"]["data"][0]
@@ -87,10 +92,7 @@ async def run(context, max_token=512):
                     break
 
 
-
-
-
-def predict_tgui(inputs, top_p, temperature, chatbot, history=[], system_prompt='', stream = True, additional_fn=None):
+def predict_tgui(inputs, top_p, temperature, chatbot, history=[], system_prompt='', stream=True, additional_fn=None):
     """
         发送至chatGPT，流式获取输出。
         用于基础的对话功能。
@@ -102,29 +104,32 @@ def predict_tgui(inputs, top_p, temperature, chatbot, history=[], system_prompt=
     """
     if additional_fn is not None:
         import core_functional
-        importlib.reload(core_functional)    # 热更新prompt
+        importlib.reload(core_functional)  # 热更新prompt
         core_functional = core_functional.get_core_functions()
-        if "PreProcess" in core_functional[additional_fn]: inputs = core_functional[additional_fn]["PreProcess"](inputs)  # 获取预处理函数（如果有的话）
+        if "PreProcess" in core_functional[additional_fn]: inputs = core_functional[additional_fn]["PreProcess"](
+            inputs)  # 获取预处理函数（如果有的话）
         inputs = core_functional[additional_fn]["Prefix"] + inputs + core_functional[additional_fn]["Suffix"]
 
     raw_input = "What I would like to say is the following: " + inputs
     logging.info(f'[raw_input] {raw_input}')
     history.extend([inputs, ""])
     chatbot.append([inputs, ""])
-    yield from update_ui(chatbot=chatbot, history=history, msg="等待响应") # 刷新界面
+    yield from update_ui(chatbot=chatbot, history=history, msg="等待响应")  # 刷新界面
 
     prompt = inputs
     tgui_say = ""
 
     mutable = ["", time.time()]
+
     def run_coorotine(mutable):
         async def get_result(mutable):
             async for response in run(prompt):
                 print(response[len(mutable[0]):])
                 mutable[0] = response
-                if (time.time() - mutable[1]) > 3: 
+                if (time.time() - mutable[1]) > 3:
                     print('exit when no listener')
                     break
+
         asyncio.run(get_result(mutable))
 
     thread_listen = threading.Thread(target=run_coorotine, args=(mutable,), daemon=True)
@@ -138,10 +143,9 @@ def predict_tgui(inputs, top_p, temperature, chatbot, history=[], system_prompt=
             tgui_say = mutable[0]
             history[-1] = tgui_say
             chatbot[-1] = (history[-2], history[-1])
-            yield from update_ui(chatbot=chatbot, history=history) # 刷新界面
+            yield from update_ui(chatbot=chatbot, history=history)  # 刷新界面
 
     logging.info(f'[response] {tgui_say}')
-
 
 
 def predict_tgui_no_ui(inputs, top_p, temperature, history=[], sys_prompt=""):
@@ -149,15 +153,18 @@ def predict_tgui_no_ui(inputs, top_p, temperature, history=[], sys_prompt=""):
     prompt = inputs
     tgui_say = ""
     mutable = ["", time.time()]
+
     def run_coorotine(mutable):
         async def get_result(mutable):
             async for response in run(prompt, max_token=20):
                 print(response[len(mutable[0]):])
                 mutable[0] = response
-                if (time.time() - mutable[1]) > 3: 
+                if (time.time() - mutable[1]) > 3:
                     print('exit when no listener')
                     break
+
         asyncio.run(get_result(mutable))
+
     thread_listen = threading.Thread(target=run_coorotine, args=(mutable,))
     thread_listen.start()
     while thread_listen.is_alive():

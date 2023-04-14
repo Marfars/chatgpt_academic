@@ -2,11 +2,10 @@ from typing import Any, Dict, List, Optional, Type
 
 import gym
 import torch as th
-from torch import nn
-
 from stable_baselines3.common.policies import BasePolicy, register_policy
 from stable_baselines3.common.torch_layers import BaseFeaturesExtractor, FlattenExtractor, NatureCNN, create_mlp
 from stable_baselines3.common.type_aliases import Schedule
+from torch import nn
 
 
 class QNetwork(BasePolicy):
@@ -22,14 +21,14 @@ class QNetwork(BasePolicy):
     """
 
     def __init__(
-        self,
-        observation_space: gym.spaces.Space,
-        action_space: gym.spaces.Space,
-        features_extractor: nn.Module,
-        features_dim: int,
-        net_arch: Optional[List[int]] = None,
-        activation_fn: Type[nn.Module] = nn.ReLU,
-        normalize_images: bool = True,
+            self,
+            observation_space: gym.spaces.Space,
+            action_space: gym.spaces.Space,
+            features_extractor: nn.Module,
+            features_dim: int,
+            net_arch: Optional[List[int]] = None,
+            activation_fn: Type[nn.Module] = nn.ReLU,
+            normalize_images: bool = True,
     ):
         super(QNetwork, self).__init__(
             observation_space,
@@ -100,17 +99,17 @@ class DQNPolicy(BasePolicy):
     """
 
     def __init__(
-        self,
-        observation_space: gym.spaces.Space,
-        action_space: gym.spaces.Space,
-        lr_schedule: Schedule,
-        net_arch: Optional[List[int]] = None,
-        activation_fn: Type[nn.Module] = nn.ReLU,
-        features_extractor_class: Type[BaseFeaturesExtractor] = FlattenExtractor,
-        features_extractor_kwargs: Optional[Dict[str, Any]] = None,
-        normalize_images: bool = True,
-        optimizer_class: Type[th.optim.Optimizer] = th.optim.Adam,
-        optimizer_kwargs: Optional[Dict[str, Any]] = None,
+            self,
+            observation_space: gym.spaces.Space,
+            action_space: gym.spaces.Space,
+            lr_schedule: Schedule,
+            net_arch: Optional[List[int]] = None,
+            activation_fn: Type[nn.Module] = nn.ReLU,
+            features_extractor_class: Type[BaseFeaturesExtractor] = FlattenExtractor,
+            features_extractor_kwargs: Optional[Dict[str, Any]] = None,
+            normalize_images: bool = True,
+            optimizer_class: Type[th.optim.Optimizer] = th.optim.Adam,
+            optimizer_kwargs: Optional[Dict[str, Any]] = None,
     ):
         super(DQNPolicy, self).__init__(
             observation_space,
@@ -207,17 +206,17 @@ class CnnPolicy(DQNPolicy):
     """
 
     def __init__(
-        self,
-        observation_space: gym.spaces.Space,
-        action_space: gym.spaces.Space,
-        lr_schedule: Schedule,
-        net_arch: Optional[List[int]] = None,
-        activation_fn: Type[nn.Module] = nn.ReLU,
-        features_extractor_class: Type[BaseFeaturesExtractor] = NatureCNN,
-        features_extractor_kwargs: Optional[Dict[str, Any]] = None,
-        normalize_images: bool = True,
-        optimizer_class: Type[th.optim.Optimizer] = th.optim.Adam,
-        optimizer_kwargs: Optional[Dict[str, Any]] = None,
+            self,
+            observation_space: gym.spaces.Space,
+            action_space: gym.spaces.Space,
+            lr_schedule: Schedule,
+            net_arch: Optional[List[int]] = None,
+            activation_fn: Type[nn.Module] = nn.ReLU,
+            features_extractor_class: Type[BaseFeaturesExtractor] = NatureCNN,
+            features_extractor_kwargs: Optional[Dict[str, Any]] = None,
+            normalize_images: bool = True,
+            optimizer_class: Type[th.optim.Optimizer] = th.optim.Adam,
+            optimizer_kwargs: Optional[Dict[str, Any]] = None,
     ):
         super(CnnPolicy, self).__init__(
             observation_space,

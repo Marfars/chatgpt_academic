@@ -1,4 +1,3 @@
-
 def check_proxy(proxies):
     import requests
     proxies_https = proxies['https'] if proxies is not None else '无'
@@ -39,7 +38,7 @@ def backup_and_download(current_version, remote_version):
     proxies, = get_conf('proxies')
     r = requests.get(
         'https://github.com/binary-husky/chatgpt_academic/archive/refs/heads/master.zip', proxies=proxies, stream=True)
-    zip_file_path = backup_dir+'/master.zip'
+    zip_file_path = backup_dir + '/master.zip'
     with open(zip_file_path, 'wb+') as f:
         f.write(r.content)
     dst_path = new_version_dir
@@ -65,18 +64,20 @@ def patch_and_restart(path):
     # if not using config_private, move origin config.py as config_private.py
     if not os.path.exists('config_private.py'):
         print亮黄('由于您没有设置config_private.py私密配置，现将您的现有配置移动至config_private.py以防止配置丢失，',
-              '另外您可以随时在history子文件夹下找回旧版的程序。')
+                  '另外您可以随时在history子文件夹下找回旧版的程序。')
         shutil.copyfile('config.py', 'config_private.py')
-    distutils.dir_util.copy_tree(path+'/chatgpt_academic-master', './')
+    distutils.dir_util.copy_tree(path + '/chatgpt_academic-master', './')
     import subprocess
     print亮绿('代码已经更新，即将更新pip包依赖……')
     for i in reversed(range(5)): time.sleep(1); print(i)
-    try: 
+    try:
         subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-r', 'requirements.txt'])
     except:
-        print亮红('pip包依赖安装出现问题，需要手动安装新增的依赖库 `python -m pip install -r requirements.txt`，然后在用常规的`python main.py`的方式启动。')
+        print亮红(
+            'pip包依赖安装出现问题，需要手动安装新增的依赖库 `python -m pip install -r requirements.txt`，然后在用常规的`python main.py`的方式启动。')
     print亮绿('更新完成，您可以随时在history子文件夹下找回旧版的程序，5s之后重启')
-    print亮红('假如重启失败，您可能需要手动安装新增的依赖库 `python -m pip install -r requirements.txt`，然后在用常规的`python main.py`的方式启动。')
+    print亮红(
+        '假如重启失败，您可能需要手动安装新增的依赖库 `python -m pip install -r requirements.txt`，然后在用常规的`python main.py`的方式启动。')
     print(' ------------------------------ -----------------------------------')
     for i in reversed(range(8)): time.sleep(1); print(i)
     os.execl(sys.executable, sys.executable, *sys.argv)
@@ -103,7 +104,8 @@ def auto_update():
         import json
         proxies, = get_conf('proxies')
         response = requests.get(
-            "https://raw.githubusercontent.com/binary-husky/chatgpt_academic/master/version", proxies=proxies, timeout=1)
+            "https://raw.githubusercontent.com/binary-husky/chatgpt_academic/master/version", proxies=proxies,
+            timeout=1)
         remote_json_data = json.loads(response.text)
         remote_version = remote_json_data['version']
         if remote_json_data["show_feature"]:
@@ -136,7 +138,9 @@ def auto_update():
 
 if __name__ == '__main__':
     import os
+
     os.environ['no_proxy'] = '*'  # 避免代理网络产生意外污染
     from toolbox import get_conf
+
     proxies, = get_conf('proxies')
     check_proxy(proxies)

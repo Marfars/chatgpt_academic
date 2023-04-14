@@ -20,20 +20,20 @@ def get_crazy_functions():
     function_plugins = {
 
         "解析整个Python项目": {
-            "Color": "stop",    # 按钮颜色
+            "Color": "stop",  # 按钮颜色
             "Function": HotReload(解析一个Python项目)
         },
         "解析整个C++项目头文件": {
-            "Color": "stop",    # 按钮颜色
+            "Color": "stop",  # 按钮颜色
             "Function": HotReload(解析一个C项目的头文件)
         },
         "解析整个C++项目（.cpp/.hpp/.c/.h）": {
-            "Color": "stop",    # 按钮颜色
+            "Color": "stop",  # 按钮颜色
             "AsButton": False,  # 加入下拉菜单中
             "Function": HotReload(解析一个C项目)
         },
         "解析整个Go项目": {
-            "Color": "stop",    # 按钮颜色
+            "Color": "stop",  # 按钮颜色
             "AsButton": False,  # 加入下拉菜单中
             "Function": HotReload(解析一个Golang项目)
         },
@@ -48,16 +48,16 @@ def get_crazy_functions():
             "Function": HotReload(解析一个Rect项目)
         },
         "解析整个Lua项目": {
-            "Color": "stop",    # 按钮颜色
+            "Color": "stop",  # 按钮颜色
             "AsButton": False,  # 加入下拉菜单中
             "Function": HotReload(解析一个Lua项目)
         },
         "读Tex论文写摘要": {
-            "Color": "stop",    # 按钮颜色
+            "Color": "stop",  # 按钮颜色
             "Function": HotReload(读文章写摘要)
         },
         "批量生成函数注释": {
-            "Color": "stop",    # 按钮颜色
+            "Color": "stop",  # 按钮颜色
             "Function": HotReload(批量生成函数注释)
         },
         "[多线程Demo] 解析此项目本身（源码自译解）": {
@@ -156,7 +156,7 @@ def get_crazy_functions():
             "AsButton": False,  # 加入下拉菜单中
             "Function": HotReload(Markdown英译中)
         },
-        
+
     })
 
     ###################### 第三组插件 ###########################
@@ -173,8 +173,6 @@ def get_crazy_functions():
 
     except Exception as err:
         print(f'[下载arxiv论文并翻译摘要] 插件导入失败 {str(err)}')
-        
-
 
     ###################### 第n组插件 ###########################
     return function_plugins

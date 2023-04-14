@@ -1,6 +1,10 @@
 import gradio as gr
+
 from toolbox import get_conf
+
 CODE_HIGHLIGHT, = get_conf('CODE_HIGHLIGHT')
+
+
 # gradio可用颜色列表
 # gr.themes.utils.colors.slate (石板色)
 # gr.themes.utils.colors.gray (灰色)
