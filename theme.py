@@ -2,7 +2,7 @@ import gradio as gr
 
 from toolbox import get_conf
 
-CODE_HIGHLIGHT, = get_conf('CODE_HIGHLIGHT')
+(CODE_HIGHLIGHT,) = get_conf("CODE_HIGHLIGHT")
 
 
 # gradio可用颜色列表
@@ -36,9 +36,21 @@ def adjust_theme():
         set_theme = gr.themes.Default(
             primary_hue=gr.themes.utils.colors.orange,
             neutral_hue=gr.themes.utils.colors.gray,
-            font=["sans-serif", "Microsoft YaHei", "ui-sans-serif", "system-ui",
-                  "sans-serif", gr.themes.utils.fonts.GoogleFont("Source Sans Pro")],
-            font_mono=["ui-monospace", "Consolas", "monospace", gr.themes.utils.fonts.GoogleFont("IBM Plex Mono")])
+            font=[
+                "sans-serif",
+                "Microsoft YaHei",
+                "ui-sans-serif",
+                "system-ui",
+                "sans-serif",
+                gr.themes.utils.fonts.GoogleFont("Source Sans Pro"),
+            ],
+            font_mono=[
+                "ui-monospace",
+                "Consolas",
+                "monospace",
+                gr.themes.utils.fonts.GoogleFont("IBM Plex Mono"),
+            ],
+        )
         set_theme.set(
             # Colors
             input_background_fill_dark="*neutral_800",
@@ -86,7 +98,7 @@ def adjust_theme():
         )
     except:
         set_theme = None
-        print('gradio版本较旧, 不能自定义字体和颜色')
+        print("gradio版本较旧, 不能自定义字体和颜色")
     return set_theme
 
 

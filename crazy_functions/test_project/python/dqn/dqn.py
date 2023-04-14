@@ -7,7 +7,11 @@ from stable_baselines3.common import logger
 from stable_baselines3.common.off_policy_algorithm import OffPolicyAlgorithm
 from stable_baselines3.common.preprocessing import maybe_transpose
 from stable_baselines3.common.type_aliases import GymEnv, MaybeCallback, Schedule
-from stable_baselines3.common.utils import get_linear_fn, is_vectorized_observation, polyak_update
+from stable_baselines3.common.utils import (
+    get_linear_fn,
+    is_vectorized_observation,
+    polyak_update,
+)
 from stable_baselines3.dqn.policies import DQNPolicy
 from torch.nn import functional as F
 
@@ -55,32 +59,31 @@ class DQN(OffPolicyAlgorithm):
     """
 
     def __init__(
-            self,
-            policy: Union[str, Type[DQNPolicy]],
-            env: Union[GymEnv, str],
-            learning_rate: Union[float, Schedule] = 1e-4,
-            buffer_size: int = 1000000,
-            learning_starts: int = 50000,
-            batch_size: Optional[int] = 32,
-            tau: float = 1.0,
-            gamma: float = 0.99,
-            train_freq: Union[int, Tuple[int, str]] = 4,
-            gradient_steps: int = 1,
-            optimize_memory_usage: bool = False,
-            target_update_interval: int = 10000,
-            exploration_fraction: float = 0.1,
-            exploration_initial_eps: float = 1.0,
-            exploration_final_eps: float = 0.05,
-            max_grad_norm: float = 10,
-            tensorboard_log: Optional[str] = None,
-            create_eval_env: bool = False,
-            policy_kwargs: Optional[Dict[str, Any]] = None,
-            verbose: int = 0,
-            seed: Optional[int] = None,
-            device: Union[th.device, str] = "auto",
-            _init_setup_model: bool = True,
+        self,
+        policy: Union[str, Type[DQNPolicy]],
+        env: Union[GymEnv, str],
+        learning_rate: Union[float, Schedule] = 1e-4,
+        buffer_size: int = 1000000,
+        learning_starts: int = 50000,
+        batch_size: Optional[int] = 32,
+        tau: float = 1.0,
+        gamma: float = 0.99,
+        train_freq: Union[int, Tuple[int, str]] = 4,
+        gradient_steps: int = 1,
+        optimize_memory_usage: bool = False,
+        target_update_interval: int = 10000,
+        exploration_fraction: float = 0.1,
+        exploration_initial_eps: float = 1.0,
+        exploration_final_eps: float = 0.05,
+        max_grad_norm: float = 10,
+        tensorboard_log: Optional[str] = None,
+        create_eval_env: bool = False,
+        policy_kwargs: Optional[Dict[str, Any]] = None,
+        verbose: int = 0,
+        seed: Optional[int] = None,
+        device: Union[th.device, str] = "auto",
+        _init_setup_model: bool = True,
     ):
-
         super(DQN, self).__init__(
             policy,
             env,
@@ -123,7 +126,9 @@ class DQN(OffPolicyAlgorithm):
         super(DQN, self)._setup_model()
         self._create_aliases()
         self.exploration_schedule = get_linear_fn(
-            self.exploration_initial_eps, self.exploration_final_eps, self.exploration_fraction
+            self.exploration_initial_eps,
+            self.exploration_final_eps,
+            self.exploration_fraction,
         )
 
     def _create_aliases(self) -> None:
@@ -136,9 +141,13 @@ class DQN(OffPolicyAlgorithm):
         This method is called in ``collect_rollouts()`` after each step in the environment.
         """
         if self.num_timesteps % self.target_update_interval == 0:
-            polyak_update(self.q_net.parameters(), self.q_net_target.parameters(), self.tau)
+            polyak_update(
+                self.q_net.parameters(), self.q_net_target.parameters(), self.tau
+            )
 
-        self.exploration_rate = self.exploration_schedule(self._current_progress_remaining)
+        self.exploration_rate = self.exploration_schedule(
+            self._current_progress_remaining
+        )
         logger.record("rollout/exploration rate", self.exploration_rate)
 
     def train(self, gradient_steps: int, batch_size: int = 100) -> None:
@@ -148,7 +157,9 @@ class DQN(OffPolicyAlgorithm):
         losses = []
         for _ in range(gradient_steps):
             # Sample replay buffer
-            replay_data = self.replay_buffer.sample(batch_size, env=self._vec_normalize_env)
+            replay_data = self.replay_buffer.sample(
+                batch_size, env=self._vec_normalize_env
+            )
 
             with th.no_grad():
                 # Compute the next Q-values using the target network
@@ -158,13 +169,18 @@ class DQN(OffPolicyAlgorithm):
                 # Avoid potential broadcast issue
                 next_q_values = next_q_values.reshape(-1, 1)
                 # 1-step TD target
-                target_q_values = replay_data.rewards + (1 - replay_data.dones) * self.gamma * next_q_values
+                target_q_values = (
+                    replay_data.rewards
+                    + (1 - replay_data.dones) * self.gamma * next_q_values
+                )
 
             # Get current Q-values estimates
             current_q_values = self.q_net(replay_data.observations)
 
             # Retrieve the q-values for the actions from the replay buffer
-            current_q_values = th.gather(current_q_values, dim=1, index=replay_data.actions.long())
+            current_q_values = th.gather(
+                current_q_values, dim=1, index=replay_data.actions.long()
+            )
 
             # Compute Huber loss (less sensitive to outliers)
             loss = F.smooth_l1_loss(current_q_values, target_q_values)
@@ -184,11 +200,11 @@ class DQN(OffPolicyAlgorithm):
         logger.record("train/loss", np.mean(losses))
 
     def predict(
-            self,
-            observation: np.ndarray,
-            state: Optional[np.ndarray] = None,
-            mask: Optional[np.ndarray] = None,
-            deterministic: bool = False,
+        self,
+        observation: np.ndarray,
+        state: Optional[np.ndarray] = None,
+        mask: Optional[np.ndarray] = None,
+        deterministic: bool = False,
     ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
         """
         Overrides the base_class predict function to include epsilon-greedy exploration.
@@ -201,7 +217,10 @@ class DQN(OffPolicyAlgorithm):
             (used in recurrent policies)
         """
         if not deterministic and np.random.rand() < self.exploration_rate:
-            if is_vectorized_observation(maybe_transpose(observation, self.observation_space), self.observation_space):
+            if is_vectorized_observation(
+                maybe_transpose(observation, self.observation_space),
+                self.observation_space,
+            ):
                 n_batch = observation.shape[0]
                 action = np.array([self.action_space.sample() for _ in range(n_batch)])
             else:
@@ -211,18 +230,17 @@ class DQN(OffPolicyAlgorithm):
         return action, state
 
     def learn(
-            self,
-            total_timesteps: int,
-            callback: MaybeCallback = None,
-            log_interval: int = 4,
-            eval_env: Optional[GymEnv] = None,
-            eval_freq: int = -1,
-            n_eval_episodes: int = 5,
-            tb_log_name: str = "DQN",
-            eval_log_path: Optional[str] = None,
-            reset_num_timesteps: bool = True,
+        self,
+        total_timesteps: int,
+        callback: MaybeCallback = None,
+        log_interval: int = 4,
+        eval_env: Optional[GymEnv] = None,
+        eval_freq: int = -1,
+        n_eval_episodes: int = 5,
+        tb_log_name: str = "DQN",
+        eval_log_path: Optional[str] = None,
+        reset_num_timesteps: bool = True,
     ) -> OffPolicyAlgorithm:
-
         return super(DQN, self).learn(
             total_timesteps=total_timesteps,
             callback=callback,
