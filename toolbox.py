@@ -465,8 +465,7 @@ def on_file_uploaded(files, chatbot, txt):
         shutil.copy(file.name, f'private_upload/{time_tag}/{file_origin_name}')
         err_msg += extract_archive(f'private_upload/{time_tag}/{file_origin_name}',
                                    dest_dir=f'private_upload/{time_tag}/{file_origin_name}.extract')
-    moved_files = [fp for fp in glob.glob(
-        'private_upload/**/*', recursive=True)]
+    moved_files = [fp for fp in glob.glob('private_upload/**/*', recursive=True)]
     txt = f'private_upload/{time_tag}'
     moved_files_str = '\t\n\n'.join(moved_files)
     chatbot.append(['我上传了文件，请查收',

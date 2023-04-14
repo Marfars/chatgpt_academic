@@ -1,10 +1,14 @@
-import os;
+import os
 
-os.environ['no_proxy'] = '*'  # 避免代理网络产生意外污染
+from check_proxy import get_current_version
 import gradio as gr
 from request_llm.bridge_chatgpt import predict
 from toolbox import format_io, find_free_port, on_file_uploaded, on_report_generated, get_conf, ArgsGeneralWrapper, \
     DummyWith
+import logging
+from core_functional import get_core_functions
+
+os.environ['no_proxy'] = '*'  # 避免代理网络产生意外污染
 
 # 建议您复制一个config_private.py放自己的秘密, 如API和代理网址, 避免不小心传github被别人看到
 proxies, WEB_PORT, LLM_MODEL, CONCURRENT_COUNT, AUTHENTICATION, CHATBOT_HEIGHT, LAYOUT, API_KEY = \
@@ -13,16 +17,14 @@ proxies, WEB_PORT, LLM_MODEL, CONCURRENT_COUNT, AUTHENTICATION, CHATBOT_HEIGHT, 
 
 # 如果WEB_PORT是-1, 则随机选取WEB端口
 PORT = find_free_port() if WEB_PORT <= 0 else WEB_PORT
-if not AUTHENTICATION: AUTHENTICATION = None
 
-from check_proxy import get_current_version
+if not AUTHENTICATION:
+    AUTHENTICATION = None
 
 initial_prompt = "Serve me as a writing and programming assistant."
 title_html = f"<h1 align=\"center\">ChatGPT 学术优化 {get_current_version()}</h1>"
-description = """代码开源和更新[地址🚀](https://github.com/binary-husky/chatgpt_academic)，感谢热情的[开发者们❤️](https://github.com/binary-husky/chatgpt_academic/graphs/contributors)"""
-
-# 问询记录, python 版本建议3.9+（越新越好）
-import logging
+description = """代码开源和更新[地址🚀](https://github.com/binary-husky/chatgpt_academic)，
+                感谢热情的[开发者们❤️](https://github.com/binary-husky/chatgpt_academic/graphs/contributors)"""
 
 os.makedirs("gpt_log", exist_ok=True)
 try:
@@ -30,9 +32,6 @@ try:
 except:
     logging.basicConfig(filename="gpt_log/chat_secrets.log", level=logging.INFO)
 print("所有问询记录将自动保存在本地目录./gpt_log/chat_secrets.log, 请注意自我隐私保护哦！")
-
-# 一些普通功能模块
-from core_functional import get_core_functions
 
 functional = get_core_functions()
 
@@ -77,9 +76,9 @@ with gr.Blocks(title="ChatGPT 学术优化", theme=set_theme, analytics_enabled=
                 with gr.Row():
                     submitBtn = gr.Button("提交", variant="primary")
                 with gr.Row():
-                    resetBtn = gr.Button("重置", variant="secondary");
+                    resetBtn = gr.Button("重置", variant="secondary")
                     resetBtn.style(size="sm")
-                    stopBtn = gr.Button("停止", variant="secondary");
+                    stopBtn = gr.Button("停止", variant="secondary")
                     stopBtn.style(size="sm")
                 with gr.Row():
                     status = gr.Markdown(f"Tip: 按Enter提交, 按Shift+Enter换行。当前模型: {LLM_MODEL} \n {proxy_info}")
@@ -126,11 +125,10 @@ with gr.Blocks(title="ChatGPT 学术优化", theme=set_theme, analytics_enabled=
                 with gr.Row():
                     submitBtn2 = gr.Button("提交", variant="primary")
                 with gr.Row():
-                    resetBtn2 = gr.Button("重置", variant="secondary");
+                    resetBtn2 = gr.Button("重置", variant="secondary")
                     resetBtn.style(size="sm")
-                    stopBtn2 = gr.Button("停止", variant="secondary");
+                    stopBtn2 = gr.Button("停止", variant="secondary")
                     stopBtn.style(size="sm")
-
 
     # 功能区显示开关与功能区的互动
     def fn_area_visibility(a):
@@ -139,7 +137,8 @@ with gr.Blocks(title="ChatGPT 学术优化", theme=set_theme, analytics_enabled=
         ret.update({area_crazy_fn: gr.update(visible=("函数插件区" in a))})
         ret.update({area_input_primary: gr.update(visible=("底部输入区" not in a))})
         ret.update({area_input_secondary: gr.update(visible=("底部输入区" in a))})
-        if "底部输入区" in a: ret.update({txt: gr.update(value="")})
+        if "底部输入区" in a:
+            ret.update({txt: gr.update(value="")})
         return ret
 
 
@@ -166,12 +165,12 @@ with gr.Blocks(title="ChatGPT 学术优化", theme=set_theme, analytics_enabled=
     file_upload.upload(on_file_uploaded, [file_upload, chatbot, txt], [chatbot, txt])
     # 函数插件-固定按钮区
     for k in crazy_fns:
-        if not crazy_fns[k].get("AsButton", True): continue
+        if not crazy_fns[k].get("AsButton", True):
+            continue
         click_handle = crazy_fns[k]["Button"].click(ArgsGeneralWrapper(crazy_fns[k]["Function"]),
                                                     [*input_combo, gr.State(PORT)], output_combo)
         click_handle.then(on_report_generated, [file_upload, chatbot], [file_upload, chatbot])
         cancel_handles.append(click_handle)
-
 
     # 函数插件-下拉菜单与随变按钮的互动
     def on_dropdown_changed(k):
@@ -180,7 +179,6 @@ with gr.Blocks(title="ChatGPT 学术优化", theme=set_theme, analytics_enabled=
 
 
     dropdown.select(on_dropdown_changed, [dropdown], [switchy_bt])
-
 
     # 随变按钮的回调函数注册
     def route(k, *args, **kwargs):

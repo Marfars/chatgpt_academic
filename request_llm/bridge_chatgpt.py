@@ -43,7 +43,7 @@ def get_full_error(chunk, stream_response):
 
 
 def predict_no_ui_long_connection(inputs, llm_kwargs, history=[], sys_prompt="", observe_window=None,
-                                  console_slience=False):
+                                  console_silence=False):
     """
         发送至chatGPT，等待回复，一次性完成，不显示中间过程。但内部用stream的方法避免中途网线被掐。
         inputs：
@@ -69,8 +69,10 @@ def predict_no_ui_long_connection(inputs, llm_kwargs, history=[], sys_prompt="",
         except requests.exceptions.ReadTimeout as e:
             retry += 1
             traceback.print_exc()
-            if retry > MAX_RETRY: raise TimeoutError
-            if MAX_RETRY != 0: print(f'请求超时，正在重试 ({retry}/{MAX_RETRY}) ……')
+            if retry > MAX_RETRY:
+                raise TimeoutError
+            if MAX_RETRY != 0:
+                print(f'请求超时，正在重试 ({retry}/{MAX_RETRY}) ……')
 
     stream_response = response.iter_lines()
     result = ''
@@ -94,7 +96,7 @@ def predict_no_ui_long_connection(inputs, llm_kwargs, history=[], sys_prompt="",
         if "role" in delta: continue
         if "content" in delta:
             result += delta["content"]
-            if not console_slience: print(delta["content"], end='')
+            if not console_silence: print(delta["content"], end='')
             if observe_window is not None:
                 # 观测窗，把已经获取的数据显示出去
                 if len(observe_window) >= 1: observe_window[0] += delta["content"]
